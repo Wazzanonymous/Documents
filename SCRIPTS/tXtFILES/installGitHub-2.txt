@@ -1,0 +1,7 @@
+Fedora,CentOS, RHEL (dnf) install commands
+
+sudo dnf install 'dnf-command(config-manager)'
+sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+sudo dnf install gh
+-----------------------------------------------------------------------------------------------------------------------------
+AWS Linux 2 (yum) install commands

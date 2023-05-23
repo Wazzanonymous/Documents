@@ -1,0 +1,91 @@
+waz@alma:~/Documents/AUTH gpg --full-generate-key
+gpg (GnuPG) 2.3.3; Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+gpg: directory '/home/waz/.gnupg' created
+gpg: keybox '/home/waz/.gnupg/pubring.kbx' created
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 1024
+Requested keysize is 1024 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 0
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: Warren Ikin
+Email address: wikin@bigpond.net.au
+Comment: GnuPG-IDperperpetual general purpose key
+You selected this USER-ID:
+    "Warren Ikin (GnuPG-IDperperpetual general purpose key) <wikin@bigpond.net.au>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? C
+Comment: General Purpose Perpetual Key
+You selected this USER-ID:
+    "Warren Ikin (General Purpose Perpetual Key) <wikin@bigpond.net.au>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+gpg: /home/waz/.gnupg/trustdb.gpg: trustdb created
+gpg: key 19BA2E11CF59792A marked as ultimately trusted
+gpg: directory '/home/waz/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/waz/.gnupg/openpgp-revocs.d/F5F63543E9A0199E6694874819BA2E11CF59792A.rev'
+public and secret key created and signed.
+
+pub   rsa1024 2023-05-22 [SC]
+      F5F63543E9A0199E6694874819BA2E11CF59792A
+uid                      Warren Ikin (General Purpose Perpetual Key) <wikin@bigpond.net.au>
+sub   rsa1024 2023-05-22 [E]
+
+bash: get_git_branch: command not found...
+waz@alma:~/Documents/AUTH
+
+gpg --armor --export F5F63543E9A0199E6694874819BA2E11CF59792A
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+waz@alma:~/Documents/AUTH gpg --armor --export F5F63543E9A0199E6694874819BA2E11CF59792A
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mI0EZGrPnQEEAKnLnEEzyXqhdh4b5Ec9cS836aR0E+N4qajcpbs1lav69ALAk2ll
+/2c3sMa9XC8mHcEhEWp3FVTDRaCD4j/Kbb0WtVx9n6vmdIEcY1ntE1G0e/1Xx+XR
+9fjl3yJostROPa+1nniwQ4NyeC1p4NfH1isGGh3SguTNHaFGGQ04Op9fABEBAAG0
+QldhcnJlbiBJa2luIChHZW5lcmFsIFB1cnBvc2UgUGVycGV0dWFsIEtleSkgPHdp
+a2luQGJpZ3BvbmQubmV0LmF1PojSBBMBCAA8FiEE9fY1Q+mgGZ5mlIdIGbouEc9Z
+eSoFAmRqz50CGwMFCwkIBwIDIgIBBhUKCQgLAgQWAgMBAh4HAheAAAoJEBm6LhHP
+WXkqt4EEAJu7eXgyRtnYSuWUzlyPei1K/rjTVkiy+4JQoaW00AaJlLjkG5GqGTY9
+JPFveOv82CbjrWAeEmjeiRypWAuyhxUIPcw8ofD17yCU3CVOx/cNaXvTwQbyKzSW
+LmYUuMRE83n9NLg8xQLeC0+WzbD3OtTtK2WubPfCz6qI+N8MBjPWuI0EZGrPnQEE
+ANn+PdITUG3+ycftC2VTcgHMVRp7eySYJOk8IOzzy8k2kVugE1cBJ1mAcRkGjgjx
+m/J1viANBOxMuXdsL5xYB6gL0SRKp7Q/dwDkxSrSdOk3JyXsY1tXPhd7YjxRIZ+S
+7GSMIR6xmqDQw6+6SjobhKcyimrkhezPkmjBOB4Lo2KxABEBAAGItgQYAQgAIBYh
+BPX2NUPpoBmeZpSHSBm6LhHPWXkqBQJkas+dAhsMAAoJEBm6LhHPWXkqISAD/iQT
+crF0pCXm4uu/D8def55tO9Vi3jiQn5v89kTGaKN9wlOB7A+mmtjZUc4KmNBeRuYx
+Mi+dP11BhmlX10HRLxIqcx3zoAGFaTfWF739vsAqUhXcEd5qjm6RAD3KC2P0NMMt
+dOAbRy6CxJYBKMXdetZ1G0gINs7nbCxACKBGAtFS
+=oaVy
+-----END PGP PUBLIC KEY BLOCK-----
+bash: get_git_branch: command not found...
+waz@alma:~/Documents/AUTH
+

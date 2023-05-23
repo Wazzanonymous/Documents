@@ -1,0 +1,9 @@
+11/05/2023 - PERPETUAL TOKEN - NO END DATE
+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
+
+curl --request GET \
+--url "https://api.github.com/octocat" \
+--header "Authorization: Bearer " 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\
+--header "X-GitHub-Api-Version: 2022-11-28"
+PullRequest
+https://github.com/Wazzanonymous/gitHub/compare/Wazzanonymous-patch-1?expand=1
