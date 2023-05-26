@@ -1,2 +1,13 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
+#A resource must have a Type attribute, which defines the kind of
+#AWS resource you want to create. The Type attribute has a special format:
+#AWS::ProductIdentifier::ResourceType
+Resources:
+  HelloBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
