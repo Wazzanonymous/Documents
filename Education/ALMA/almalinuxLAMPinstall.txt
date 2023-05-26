@@ -1,0 +1,267 @@
+1.)
+sudo dnf install -y httpd
+2.)
+chkconfig httpd on ~> 
+# Note: Forwarding request to 'systemctl enable httpd.service'.
+#Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/#systemd/system/httpd.service.
+ls `find /etc -type l | grep httpd.service 2>/dev/null`
+readlink `find /etc -type l | grep httpd.service 2>/dev/null`
+3.)
+apachectl start
+4.) 
+firewall-cmd --zone=public --list-services
+
+It should return:
+
+cockpit dhcpv6-client ssh
+
+Add the following services and ports with these commands:
+
+firewall-cmd --zone=public --add-port 80/tcp --permanent
+firewall-cmd --zone=public --add-port 443/tcp --permanent
+firewall-cmd --zone=public --add-port 8080/tcp --permanent
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --zone=public --add-service=https --permanent
+
+Check the open ports with the following command:
+
+firewall-cmd --zone=public --list-ports
+
+It should return:
+
+80/tcp 443/tcp 8080/tcp
+
+Check the open services with the following command:
+
+firewall-cmd --zone=public --list-services
+
+It should return:
+
+cockpit dhcpv6-client http https ssh
+5.)
+apache restart
+
+<html>
+<body>
+Hello World!
+</body>
+</html>
+
+Then, you can launch the Firefox browser and type the following:
+
+localhost/hello.htm
+
+It should print “Hello World!” in the browser. 
+6.)
+apache restart
+
+<html>
+<body>
+Hello World!
+</body>
+</html>
+
+Then, you can launch the Firefox browser and type the following:
+
+localhost/hello.htm
+
+It should print “Hello World!” in the browser. 
+7.)
+nstall the php_mysqli package as the sudoer user with the following command:
+
+dnf install -y php-mysqli
+
+Create the mysqli_check.php file in the /var/www/html directory as the root user:
+
+<html>
+<header>
+<title>Static Query Object Sample</title>
+</header>
+<body>
+<?php
+  if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
+    print 'mysqli not installed.'; }
+  else {
+    print 'mysqli installed.'; }
+  if (!function_exists('pdo_init') && !extension_loaded('pdo')) {
+    print '<p>pdo not installed.</p>'; }
+  else {
+    print '<p>pdo installed.</p>'; }
+?>
+</script>
+</body>
+</html>
+
+apache restart
+
+Then, you can launch the Firefox browser and type the following:
+
+localhost/mysqli_check.php
+
+It should print the following in the browser.
+
+mysqli installed.
+ 
+pdo installed.
+8.)
+rpm -qa | grep mod_ssl
+
+Assuming it’s not installed, you install it like this:
+
+dnf install -y mod_ssl
+
+Recheck after installing mod_ssl with the following command::
+
+rpm -qa | grep mod_ssl
+
+It should print:
+
+mod_ssl-2.4.51-7.el9_0.x86_64
+9.)
+AlmaLinux and Apache require you to resolve the ServerName values and the public and private keys. Run this command on AlmaLinux to begin verifying and configuring the ServerName values and the public and private keys:
+
+httpd -M | grep ssl
+
+Assuming a new installation consistent with were MySQL and Apache were just configured, you should get the following message:
+
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to suppress this message
+ ssl_module (shared)
+
+Recheck the failure for more detail with this command:
+
+sudo systemctl status httpd.service -l --no-pager
+
+It should print:
+
+● httpd.service - The Apache HTTP Server
+     Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+    Drop-In: /usr/lib/systemd/system/httpd.service.d
+             └─php-fpm.conf
+     Active: active (running) since Sun 2022-11-13 22:39:07 EST; 1h 37min ago
+       Docs: man:httpd.service(8)
+   Main PID: 1351 (httpd)
+     Status: "Total requests: 0; Idle/Busy workers 100/0;Requests/sec: 0; Bytes served/sec:   0 B/sec"
+      Tasks: 213 (limit: 23280)
+     Memory: 43.1M
+        CPU: 2.733s
+     CGroup: /system.slice/httpd.service
+             ├─1351 /usr/sbin/httpd -DFOREGROUND
+             ├─1443 /usr/sbin/httpd -DFOREGROUND
+             ├─1452 /usr/sbin/httpd -DFOREGROUND
+             ├─1456 /usr/sbin/httpd -DFOREGROUND
+             └─1459 /usr/sbin/httpd -DFOREGROUND
+ 
+Nov 13 22:39:06 localhost.localdomain systemd[1]: Starting The Apache HTTP Server...
+Nov 13 22:39:07 localhost.localdomain httpd[1351]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to suppress this message
+Nov 13 22:39:07 localhost.localdomain systemd[1]: Started The Apache HTTP Server.
+Nov 13 22:39:07 localhost.localdomain httpd[1351]: Server configured, listening on: port 80
+
+It takes the next set of steps to fix the ServerName values.
+
+    Generically, on Linux you need to find the files to modify. You can use the following command from within the /etc directory to find the configuration files in the /etc directory that include ServerName in them. Their values will be proceeded by a # symbol because they’re comments by default.
+
+    find /etc -type f | xargs grep -i ServerName
+
+    It should return the following:
+
+    ./httpd/conf.d/ssl.conf:#ServerName www.example.com:443
+    ./httpd/conf/httpd.conf:# ServerName gives the name and port that the server uses to identify itself.
+    ./httpd/conf/httpd.conf:#ServerName www.example.com:80
+    ./dnsmasq.conf:# tftp_servername (the third option to dhcp-boot) and in that
+
+    Add the following line to the ssl.conf file as the root user:
+
+    ServerName localhost:443
+
+    Add the following line to the httpd.conf file as the root user:
+
+    ServerName localhost:443
+
+    After adding the two values, restart Apache with the following command:
+
+    sudo apachectl restart
+
+    Rerun the systemctl command to get the status of the httpd service with this command:
+
+    sudo systemctl status httpd.service -l --no-pager
+
+    It should print:
+
+    ● httpd.service - The Apache HTTP Server
+         Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+        Drop-In: /usr/lib/systemd/system/httpd.service.d
+                 └─php-fpm.conf
+         Active: active (running) since Mon 2022-11-14 00:37:03 EST; 3min 23s ago
+           Docs: man:httpd.service(8)
+       Main PID: 53596 (httpd)
+         Status: "Total requests: 0; Idle/Busy workers 100/0;Requests/sec: 0; Bytes served/sec:   0 B/sec"
+          Tasks: 213 (limit: 23280)
+         Memory: 34.0M
+            CPU: 183ms
+         CGroup: /system.slice/httpd.service
+                 ├─53596 /usr/sbin/httpd -DFOREGROUND
+                 ├─53597 /usr/sbin/httpd -DFOREGROUND
+                 ├─53598 /usr/sbin/httpd -DFOREGROUND
+                 ├─53599 /usr/sbin/httpd -DFOREGROUND
+                 └─53600 /usr/sbin/httpd -DFOREGROUND
+     
+    Nov 14 00:37:03 localhost.localdomain systemd[1]: Starting The Apache HTTP Server...
+    Nov 14 00:37:03 localhost.localdomain systemd[1]: Started The Apache HTTP Server.
+    Nov 14 00:37:03 localhost.localdomain httpd[53596]: Server configured, listening on: port 443, port 80
+10.)
+ Your next step requires setting up an SSL Certificate. Consistent with the design to build a standalone test system that uses a DHCP assigned IP address to resolve a localhost server name, you require the following two tasks to create an openssl self-signed certificate.
+
+    On the new instance, you create a private subdirectory with this command:
+
+    sudo mkdir /etc/ssl/private
+
+    Then, you can build a self-signed certificate with this command:
+
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+
+    The openssl command will prompt you for these values to create a private key:
+
+    You are about to be asked to enter information that will be incorporated
+    into your certificate request.
+    What you are about to enter is what is called a Distinguished Name or a DN.
+    There are quite a few fields but you can leave some blank
+    For some fields there will be a default value,
+    If you enter '.', the field will be left blank.
+    -----
+    Country Name (2 letter code) [XX]:
+    State or Province Name (full name) []:
+    Locality Name (eg, city) [Default City]:
+    Organization Name (eg, company) [Default Company Ltd]:
+    Organizational Unit Name (eg, section) []:
+    Common Name (eg, your name or your server's hostname) []:
+    Email Address []:
+11.)
+Your last step requires three tasks to configure Apache to use SSL.
+
+    You need to create the following sites-available directory with the following command as the root user:
+
+    mkdir /etc/httpd/sites-available
+
+    Add the following localhost.conf/etc/httpd/sites-available directory:
+
+    <VirtualHost *:443>
+       ServerName localhost
+       DocumentRoot /var/www/html
+     
+       SSLEngine on
+       SSLCertificateFile /etc/ssl/certs/localhost.crt
+       SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+    </VirtualHost>
+
+    Restart Apache with the following command:
+
+    sudo apachectl restart
+12.)
+After configuring everything, let’s test our self-signed HTTPS skunkworks. Launch the default Firefox browser and enter the following URL, which uses the mysql_check.php file from step #7:
+
+https://localhost/mysqli_check.php
+
+It will raise a warning message about a potential security risk, which is caused by our self-signed certificate. Click the Advanced… button and will see the option to Accept the Risk and Continue. If you want to use the self-signed and contained AlmaLinux LAMP stack for developer testing, accept the risk.
+###################################################################################
+
+

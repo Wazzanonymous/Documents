@@ -1,0 +1,136 @@
+
+
+Michael McLaughlin's Technical Blog
+MySQL on AlmaLinux
+
+with 2 comments
+
+After installing AlmaLinux in a VMware VM on my MacBook Pro (Intel Chip), and updating the packages with the following command:
+
+sudo dnf upgrade --refresh -y
+
+MySQL was first on my installation and configuration list. Here are the commands to install and configure it on AlmaLinux.
+
+Install the MySQL Server packages and dependents:
+
+sudo dnf install mysql mysql-server -y
+
+Install the MySQL service utilities with the initscripts package, using the following command:
+
+sudo yum install -y initscripts
+
+Start the MySQL daemon with the following command:
+
+sudo service mysqld start
+
+Connect and verify the root user can connect to the database. At this point, you’ve not set the root user’s password and should use the following syntax:
+
+mysql -uroot
+
+It should connect and display:
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.30 Source distribution
+ 
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+ 
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+ 
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+ 
+mysql>
+
+Exit MySQL and run the following command:
+
+mysql_secure_installation
+
+It’ll run you through the following prompts, which you may change to suit your installation. My choices are a trivial student database isolated inside a VM.
+
+Securing the MySQL server deployment.
+ 
+Connecting to MySQL using a blank password.
+ 
+VALIDATE PASSWORD COMPONENT can be used to test passwords
+and improve security. It checks the strength of password
+and allows the users to set only those passwords which are
+secure enough. Would you like to setup VALIDATE PASSWORD component?
+ 
+Press y|Y for Yes, any other key for No: n
+Please set the password for root here.
+ 
+New password: 
+ 
+Re-enter new password: 
+By default, a MySQL installation has an anonymous user,
+allowing anyone to log into MySQL without having to have
+a user account created for them. This is intended only for
+testing, and to make the installation go a bit smoother.
+You should remove them before moving into a production
+environment.
+ 
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+Success.
+ 
+ 
+Normally, root should only be allowed to connect from
+'localhost'. This ensures that someone cannot guess at
+the root password from the network.
+ 
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+Success.
+ 
+By default, MySQL comes with a database named 'test' that
+anyone can access. This is also intended only for testing,
+and should be removed before moving into a production
+environment.
+ 
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+ - Dropping test database...
+Success.
+ 
+ - Removing privileges on test database...
+Success.
+ 
+Reloading the privilege tables will ensure that all changes
+made so far will take effect immediately.
+ 
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+Success.
+ 
+All done!
+
+The next step requires setting up the sample sakila and studentdb database. The syntax has changed from prior releases. Here are the new three steps:
+
+    Grant the root user the privilege to grant to others, which root does not have by default. You use the following syntax as the MySQL root user:
+
+    mysql> GRANT ALL ON *.* TO 'root'@'localhost';
+
+    Download the sakila database, which you can download from this site. Click on the sakila database’s TGZ download.
+
+    When you download the sakila zip file it creates a sakila-db folder in the /home/student/Downloads directory. Copy the sakila-db folder into the /home/student/Data/sakila directory. Then, change to the /home/student/Data/sakila/sakila-db directory, connect to mysql as the root user, and run the following command:
+
+    mysql> SOURCE /home/student/Data/sakila/sakila-db/sakila-schema.sql
+    mysql> SOURCE /home/student/Data/sakila/sakila-db/sakila-data.sql
+
+    Create the studentdb database with the following command as the MySQL root user:
+
+    mysql> CREATE DATABASE studentdb;
+
+    Create the user with a clear English password and grant the user student full privileges on the sakila and studentdb databases:
+
+    mysql> CREATE USER 'student'@'localhost' IDENTIFIED WITH mysql_native_password BY 'student';
+    mysql> GRANT ALL ON studentdb.* TO 'student'@'localhost';
+    mysql> GRANT ALL ON sakila.* TO 'student'@'localhost';
+
+You can now connect to a sandboxed sakila database with the student user’s credentials, like:
+
+mysql -ustudent -p -Dsakila
+
+or, you can now connect to a sandboxed studentdb database with the student user’s credentials, like:
+
+mysql -ustudent -p -Dstudentdb
+
+
